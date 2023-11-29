@@ -13,9 +13,12 @@ import (
 	"io"
 	"os"
 	"reflect"
+
+	"github.com/cqzcqq/webp/convertor"
+	"github.com/cqzcqq/webp/encoder"
 )
 
-const DefaulQuality = 90
+const DefaulQuality = 75
 
 // Options are the encoding parameters.
 type Options struct {
@@ -40,7 +43,27 @@ func Save(name string, m image.Image, opt *Options) (err error) {
 
 // Encode writes the image m to w in WEBP format.
 func Encode(w io.Writer, m image.Image, opt *Options) (err error) {
-	return encode(w, m, opt)
+	err = encodeKolesa(w, m, opt)
+	return
+}
+
+func encodeKolesa(w io.Writer, m image.Image, opt *Options) (err error) {
+	quality := float32(DefaulQuality)
+	if opt.Quality > float32(0) && opt.Quality <= float32(100) {
+		quality = opt.Quality
+	}
+
+	var opts *encoder.Options
+	opts, err = encoder.NewLossyEncoderOptions(encoder.PresetDefault, quality)
+	if err != nil {
+		return
+	}
+
+	if err = convertor.Encode(w, m, opts); err != nil {
+		return
+	}
+
+	return
 }
 
 func encode(w io.Writer, m image.Image, opt *Options) (err error) {
