@@ -14,6 +14,9 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+
+	"github.com/cqzcqq/webp/convertor"
+	"github.com/cqzcqq/webp/decoder"
 )
 
 func LoadConfig(name string) (config image.Config, err error) {
@@ -86,6 +89,19 @@ func DecodeConfig(r io.Reader) (config image.Config, err error) {
 
 // Decode reads a WEBP image from r and returns it as an image.Image.
 func Decode(r io.Reader) (m image.Image, err error) {
+	m, err = decodeKolesa(r)
+	return
+}
+
+func decodeKolesa(r io.Reader) (m image.Image, err error) {
+	m, err = convertor.Decode(r, &decoder.Options{})
+	if err != nil {
+		return
+	}
+	return
+}
+
+func decode(r io.Reader) (m image.Image, err error) {
 	data, err := ioutil.ReadAll(r)
 	if err != nil {
 		return

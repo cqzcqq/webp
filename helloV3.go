@@ -8,8 +8,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/cqzcqq/webp/convertor"
-	"github.com/cqzcqq/webp/decoder"
+	"github.com/cqzcqq/webp"
 )
 
 func main() {
@@ -25,9 +24,9 @@ func main() {
 	//noinspection GoUnhandledErrorResult
 	defer output.Close()
 
-	img, err := convertor.Decode(file, &decoder.Options{})
+	img, err := webp.Decode(file)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	if err = jpeg.Encode(output, img, &jpeg.Options{Quality: 75}); err != nil {

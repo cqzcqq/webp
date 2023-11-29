@@ -12,8 +12,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/cqzcqq/webp/convertor"
-	"github.com/cqzcqq/webp/encoder"
+	"github.com/cqzcqq/webp"
 )
 
 func main() {
@@ -34,12 +33,7 @@ func main() {
 	//noinspection GoUnhandledErrorResult
 	defer output.Close()
 
-	options, err := encoder.NewLossyEncoderOptions(encoder.PresetDefault, 75)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	if err := convertor.Encode(output, img, options); err != nil {
-		log.Fatalln(err)
+	if err = webp.Encode(output, img, &webp.Options{Lossless: true}); err != nil {
+		log.Println(err)
 	}
 }
